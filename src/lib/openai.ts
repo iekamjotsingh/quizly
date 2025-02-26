@@ -1,21 +1,15 @@
-import { OpenAI } from 'openai';
+import OpenAI from 'openai';
 
-const getOpenAIClient = () => {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  if (!apiKey) {
-    console.error('OpenAI API key is missing');
-    return null;
-  }
-  
-  try {
-    return new OpenAI({
-      apiKey,
-      dangerouslyAllowBrowser: true
-    });
-  } catch (error) {
-    console.error('Failed to initialize OpenAI client:', error);
-    return null;
-  }
-};
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
-export const openai = getOpenAIClient();
+if (!apiKey) {
+  console.error('API Key missing:', import.meta.env); // For debugging
+  throw new Error('OpenAI API key not configured. Please add your API key to the .env file.');
+}
+
+export const openai = new OpenAI({
+  apiKey,
+  dangerouslyAllowBrowser: true
+});
+
+export default openai;

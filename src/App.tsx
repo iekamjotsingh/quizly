@@ -196,7 +196,11 @@ const AppContent: React.FC<{ user: User | null }> = ({ user }) => {
                   <p className="text-xl text-gray-700">Preparing your questions...</p>
                 </div>
               ) : quizStarted && !quizCompleted ? (
-                <Quiz questions={questions} onComplete={handleComplete} />
+                <Quiz 
+                  questions={questions} 
+                  onComplete={handleComplete}
+                  currentQuiz={currentQuiz!}
+                />
               ) : (
                 <Navigate to="/dashboard" replace />
               )

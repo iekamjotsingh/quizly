@@ -5,10 +5,10 @@ export interface Question {
 }
 
 export interface QuizConfig {
-  grade: string;
   subject: string;
+  grade: string;
+  difficulty: string;
   numberOfQuestions: number;
-  difficulty: 'easy' | 'medium' | 'hard';
 }
 
 export interface QuizHistory {
@@ -17,6 +17,15 @@ export interface QuizHistory {
   grade: string;
   score: number;
   totalQuestions: number;
+}
+
+export interface AnsweredQuestion {
+  id: string;
+  question: string;
+  subject: string;
+  grade: string;
+  isCorrect: boolean;
+  timestamp: string;
 }
 
 // Add this to store used questions

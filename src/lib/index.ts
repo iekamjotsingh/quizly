@@ -1,1 +1,1 @@
-export * from './openai'; 
+export { default as openai } from './openai'; 

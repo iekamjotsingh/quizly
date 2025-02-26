@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { collection, addDoc, query, where, getDocs, orderBy, doc, updateDoc, arrayUnion, limit as firestoreLimit } from 'firebase/firestore';
-import { QuizHistory, QuestionBank } from '../types';
+import { QuizHistory, QuestionBank, AnsweredQuestion } from '../types';
 
 export const saveQuizResult = async (userId: string, result: QuizHistory) => {
   try {
@@ -79,6 +79,50 @@ export const markQuestionAsUsed = async (questionId: string, userId: string) => 
       usedBy: arrayUnion(userId)
     });
   } catch (error) {
+    throw error;
+  }
+};
+
+export const saveAnsweredQuestion = async (
+  userId: string,
+  question: string,
+  subject: string,
+  grade: string,
+  isCorrect: boolean
+) => {
+  try {
+    const answeredQuestionsRef = collection(db, 'users', userId, 'answeredQuestions');
+    await addDoc(answeredQuestionsRef, {
+      question,
+      subject,
+      grade,
+      isCorrect,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error saving answered question:', error);
+    throw error;
+  }
+};
+
+export const getAnsweredQuestions = async (
+  userId: string,
+  subject: string,
+  grade: string
+): Promise<AnsweredQuestion[]> => {
+  try {
+    const answeredQuestionsRef = collection(db, 'users', userId, 'answeredQuestions');
+    const q = query(answeredQuestionsRef);
+    const snapshot = await getDocs(q);
+    
+    return snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as AnsweredQuestion))
+      .filter(q => q.subject === subject && q.grade === grade);
+  } catch (error) {
+    console.error('Error getting answered questions:', error);
     throw error;
   }
 }; 
